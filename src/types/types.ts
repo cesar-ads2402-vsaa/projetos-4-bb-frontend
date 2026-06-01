@@ -4,6 +4,7 @@ export interface Tutorial {
     descricao: string;
     youtubeUrl: string;
     dataCriacao: string;
+    categoria?: string;
 }
 
 export interface Audio {
@@ -22,6 +23,7 @@ export interface Usuario {
     email: string;
     cargo: string;
 }
+
 export interface SelectionState {
     selectedLanguage: string | null;
     selectProcess: string | null;
@@ -39,6 +41,7 @@ export interface FetchOptions extends RequestInit {
 export interface VideoPlayerProps {
     urlYoutube?: string;
 }
+
 export interface AudioCardProps {
     audioId: number;
     nomeAutor?: string;

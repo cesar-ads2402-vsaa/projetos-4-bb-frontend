@@ -4,6 +4,7 @@ export interface Tutorial {
     descricao: string;
     youtubeUrl: string;
     dataCriacao: string;
+    categoria?: string;
 }
 
 export interface Audio {

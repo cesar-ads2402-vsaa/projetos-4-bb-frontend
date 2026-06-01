@@ -9,6 +9,7 @@ import { TutorialService } from "@/services/TutorialService";
 import { AudioService } from "@/services/AudioService";
 import { UsuarioService } from "@/services/UsuarioService";
 import { IdiomaService } from "@/services/IdiomaService";
+import {FiCreditCard, FiDollarSign, FiGrid, FiLock, FiSmartphone} from "react-icons/fi";
 
 export function useAdminDashboard() {
     const [abaAtiva, setAbaAtiva] = useState<"TUTORIAIS" | "MODERACAO" | "USUARIOS" | "IDIOMAS">("TUTORIAIS");
@@ -20,13 +21,18 @@ export function useAdminDashboard() {
 
     const [novaPergunta, setNovaPergunta] = useState("");
     const [novaUrl, setNovaUrl] = useState("");
+    const [novaCategoria, setNovaCategoria] = useState("");
     const [carregandoForm, setCarregandoForm] = useState(false);
 
     // Estados de Idiomas e Filtros
     const [idiomas, setIdiomas] = useState<any[]>([]);
     const [novoNomeIdioma, setNovoNomeIdioma] = useState("");
     const [novoCodigoIdioma, setNovoCodigoIdioma] = useState("");
-    const [filtroIdioma, setFiltroIdioma] = useState(""); // <-- Novo estado para o filtro
+    const [filtroIdioma, setFiltroIdioma] = useState("");
+    const [filtroModIdioma, setFiltroModIdioma] = useState("");
+    const [filtroModTutorial, setFiltroModTutorial] = useState("");
+
+
 
     // --- FUNÇÕES DE BUSCA (GET) ---
     const buscarTutoriais = async () => {
@@ -68,16 +74,28 @@ export function useAdminDashboard() {
 
     // --- FUNÇÕES DE AÇÃO ---
     const criarTutorial = async () => {
-        if (!novaPergunta || !novaUrl) return toaster.create({ title: "Preencha tudo!", type: "warning" });
+        if (!novaPergunta || !novaUrl || !novaCategoria) return toaster.create({ title: "Preencha tudo!", type: "warning" });
+        setCarregandoForm(true);
         setCarregandoForm(true);
         try {
-            const urlProntaParaBanco = formatarUrlYoutube(novaUrl);
-            await TutorialService.criar({ pergunta: novaPergunta, youtubeUrl: urlProntaParaBanco });
-            toaster.create({ title: "Tutorial criado!", type: "success" });
-            setNovaPergunta(""); setNovaUrl("");
+            const urlFormatada = formatarUrlYoutube(novaUrl);
+            // 3. Enviar a categoria para o Service
+            await TutorialService.criar({
+                pergunta: novaPergunta,
+                youtubeUrl: urlFormatada,
+                categoria: novaCategoria
+            });
+
+            toaster.create({ title: "Criado com sucesso!", type: "success" });
+            setNovaPergunta("");
+            setNovaUrl("");
+            setNovaCategoria(""); // Limpar após criar
             buscarTutoriais();
-        } catch (e) { toaster.create({ title: "Erro ao criar", type: "error" }); }
-        finally { setCarregandoForm(false); }
+        } catch (e) {
+            toaster.create({ title: "Erro ao criar", type: "error" });
+        } finally {
+            setCarregandoForm(false);
+        }
     };
 
     const deletarTutorial = async (id: number) => {
@@ -164,15 +182,18 @@ export function useAdminDashboard() {
             usuariosComuns,
             audiosAprovados,
             cargoLogado,
-            filtroIdioma, // <-- Exportado
+            filtroIdioma, //
+            filtroModIdioma,
+            filtroModTutorial,
             idiomas,
-            form: { novaPergunta, novaUrl, carregandoForm },
+            form: { novaPergunta, novaUrl,novaCategoria, carregandoForm },
             formIdioma: { novoNomeIdioma, novoCodigoIdioma }
         },
         acoes: {
             setAbaAtiva,
             setNovaPergunta,
             setNovaUrl,
+            setNovaCategoria,
             criarTutorial,
             deletarTutorial,
             aprovarAudio,
@@ -185,6 +206,8 @@ export function useAdminDashboard() {
             criarIdioma,
             deletarIdioma,
             setFiltroIdioma,
+            setFiltroModIdioma,
+            setFiltroModTutorial,
         }
     };
 }

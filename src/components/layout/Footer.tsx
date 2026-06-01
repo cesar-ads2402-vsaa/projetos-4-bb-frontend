@@ -10,7 +10,7 @@ export function Footer() {
                         FAQ Inclusivo. Projeto de Impacto Social.
                     </Text>
                     <Stack direction="row" gap={6}>
-                        <Link href="/sobre" color="black" fontWeight="bold" _hover={{ textDecoration: "underline", color: "gray.700" }}>Sobre</Link>
+                        <Link href="#" color="black" fontWeight="bold" _hover={{ textDecoration: "underline", color: "gray.700" }}>Sobre</Link>
                         <Link href="#" color="black" fontWeight="bold" _hover={{ textDecoration: "underline", color: "gray.700" }}>Privacidade</Link>
                         <Link href="#" color="black" fontWeight="bold" _hover={{ textDecoration: "underline", color: "gray.700" }}>Contato</Link>
                     </Stack>

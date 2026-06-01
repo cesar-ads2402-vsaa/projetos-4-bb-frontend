@@ -72,14 +72,14 @@ export function useMediaView() {
 
     return {
         estados: {
-            tutoriais, // Agora passamos a lista inteira para o map da MediaView
             selectedLanguage,
             selectProcess,
             audiosComunidade,
             carregandoAudios,
+            processosNomes,
             conteudoAtual
         },
         acoes: { setLanguage, setProcess },
-        configs: { idiomas: idiomasDisponiveis }
+        configs: { idiomas: idiomasDisponiveis}
     };
 }

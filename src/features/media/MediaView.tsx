@@ -9,8 +9,7 @@ import {
     Heading,
     Button,
     Flex,
-    IconButton,
-    Container
+    IconButton
 } from "@chakra-ui/react";
 import { FiArrowLeft, FiSliders } from "react-icons/fi";
 
@@ -28,12 +27,12 @@ export function MediaView() {
     // --- VISÃO 1: DETALHES (Vídeo Aberto) ---
     if (estados.selectProcess) {
         return (
-            <Box bg="white" minH="calc(100vh - 70px)">
+            <Box bg="white" minH="calc(100vh - 70px)" w="full">
                 {/* NAVBAR INTERNA DO VÍDEO */}
                 <Flex
                     h="56px"
                     bg="gray.50"
-                    px={4}
+                    px={{ base: 4, md: 8, "2xl": 12 }}
                     align="center"
                     gap={4}
                     borderBottom="1px solid"
@@ -57,15 +56,14 @@ export function MediaView() {
                     </Text>
                 </Flex>
 
-                {/* CONTAINER RESPONSIVO (maxW protege no Desktop) */}
-                <Container maxW="container.lg" p={{ base: 4, md: 6 }} mt={2}>
+                {/* CONTEÚDO FLUIDO DO VÍDEO */}
+                <VStack p={{ base: 4, md: 8, "2xl": 12 }} gap={5} w="full" mt={2} align="stretch">
 
-                    {/* FILTRO DE IDIOMAS ACIMA DO CONTEÚDO */}
+                    {/* CARROSSEL DE IDIOMAS ACIMA DO VÍDEO */}
                     <HStack
                         w="full"
                         overflowX="auto"
-                        pb={3}
-                        mb={2}
+                        pb={1}
                         css={{
                             scrollbarWidth: "none",
                             "&::-webkit-scrollbar": { display: "none" }
@@ -88,15 +86,12 @@ export function MediaView() {
                         ))}
                     </HStack>
 
-                    {/* LAYOUT GRID: No mobile fica empilhado (1 coluna). No Desktop divide em 2 colunas! */}
-                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 6, md: 8 }} alignItems="start">
-
-                        {/* COLUNA ESQUERDA: O reprodutor de vídeo */}
+                    {/* No Desktop WQHD divide em duas colunas gigantes esticadas */}
+                    <SimpleGrid columns={{ base: 1, md: 2 }} gap={{ base: 6, md: 8 }} alignItems="start" w="full">
                         <Box w="full">
                             <VideoPlayer urlYoutube={estados.conteudoAtual?.youtubeUrl} />
                         </Box>
 
-                        {/* COLUNA DIREITA: Interações da Comunidade */}
                         <Box w="full" bg="white" borderRadius="2xl" p={5} borderWidth="1px" borderColor="gray.200" shadow="sm">
                             <VStack align="stretch" gap={6}>
                                 {estados.conteudoAtual && (
@@ -105,7 +100,7 @@ export function MediaView() {
                                         idioma={estados.selectedLanguage}
                                     />
                                 )}
-                                <Box maxH={{ base: "300px", md: "450px" }} overflowY="auto">
+                                <Box maxH={{ base: "300px", md: "500px" }} overflowY="auto">
                                     <ListaAudios
                                         audios={estados.audiosComunidade}
                                         carregando={estados.carregandoAudios}
@@ -113,79 +108,75 @@ export function MediaView() {
                                 </Box>
                             </VStack>
                         </Box>
-
                     </SimpleGrid>
-                </Container>
+                </VStack>
             </Box>
         );
     }
 
     // --- VISÃO 2: GALERIA GERAL (Vídeos em Alta) ---
     return (
-        <Box bg="white" minH="calc(100vh - 70px)">
-            {/* Uso de Container para centralizar e blindar a largura no Desktop */}
-            <Container maxW="container.xl" py={{ base: 4, md: 6 }}>
-                <VStack align="start" gap={6} w="full">
+        <Box bg="white" minH="calc(100vh - 70px)" w="full" px={{ base: 4, md: 8, "2xl": 12 }} py={6}>
+            <VStack align="start" gap={6} w="full">
 
-                    <Heading size="md" color="blue.900" fontWeight="black">
-                        Vídeos em Alta - {estados.selectedLanguage || "Português"}
-                    </Heading>
+                <Heading size="md" color="blue.900" fontWeight="black">
+                    Vídeos em Alta - {estados.selectedLanguage || "Português"}
+                </Heading>
 
-                    {/* Filtros de Idioma da Galeria */}
-                    <HStack
-                        w="full"
-                        overflowX="auto"
-                        pb={2}
-                        css={{
-                            scrollbarWidth: "none",
-                            "&::-webkit-scrollbar": { display: "none" }
-                        }}
+                {/* Filtros de Idioma da Galeria */}
+                <HStack
+                    w="full"
+                    overflowX="auto"
+                    pb={2}
+                    css={{
+                        scrollbarWidth: "none",
+                        "&::-webkit-scrollbar": { display: "none" }
+                    }}
+                >
+                    <IconButton aria-label="Filtros" variant="subtle" colorPalette="gray" borderRadius="md" size="sm" flexShrink={0}>
+                        <FiSliders />
+                    </IconButton>
+                    <Button
+                        size="sm"
+                        borderRadius="md"
+                        variant={!estados.selectedLanguage ? "solid" : "subtle"}
+                        colorPalette={!estados.selectedLanguage ? "blue" : "gray"}
+                        onClick={() => acoes.setLanguage("")}
+                        _hover={{ bg: "gray.200" }}
                     >
-                        <IconButton aria-label="Filtros" variant="subtle" colorPalette="gray" borderRadius="md" size="sm" flexShrink={0}>
-                            <FiSliders />
-                        </IconButton>
+                        Explorar
+                    </Button>
+                    {configs.idiomas.map((lang) => (
                         <Button
+                            key={lang}
                             size="sm"
                             borderRadius="md"
-                            variant={!estados.selectedLanguage ? "solid" : "subtle"}
-                            colorPalette={!estados.selectedLanguage ? "blue" : "gray"}
-                            onClick={() => acoes.setLanguage("")}
-                            _hover={{ bg: "gray.200" }}
+                            flexShrink={0}
+                            variant={estados.selectedLanguage === lang ? "solid" : "subtle"}
+                            colorPalette={estados.selectedLanguage === lang ? "blue" : "gray"}
+                            onClick={() => acoes.setLanguage(lang)}
                         >
-                            Explorar
+                            {lang}
                         </Button>
-                        {configs.idiomas.map((lang) => (
-                            <Button
-                                key={lang}
-                                size="sm"
-                                borderRadius="md"
-                                flexShrink={0}
-                                variant={estados.selectedLanguage === lang ? "solid" : "subtle"}
-                                colorPalette={estados.selectedLanguage === lang ? "blue" : "gray"}
-                                onClick={() => acoes.setLanguage(lang)}
-                            >
-                                {lang}
-                            </Button>
-                        ))}
-                    </HStack>
+                    ))}
+                </HStack>
 
-                    {/* Grid de vídeos perfeitamente distribuído no Desktop */}
-                    <SimpleGrid
-                        columns={{ base: 1, sm: 2, md: 3, lg: 4 }}
-                        gap={{ base: 6, md: 8 }}
-                        w="full"
-                        pt={2}
-                    >
-                        {estados.tutoriais.map((tut: Tutorial) => (
-                            <TutorialCard
-                                key={tut.id}
-                                tutorial={tut}
-                                onClick={() => acoes.setProcess(tut.pergunta)}
-                            />
-                        ))}
-                    </SimpleGrid>
-                </VStack>
-            </Container>
+                {/* Grid Responsiva  */}
+                <SimpleGrid
+                    columns={{ base: 1, sm: 2, md: 3, lg: 4, "2xl": 5 }}
+                    gap={{ base: 6, md: 8 }}
+                    w="full"
+                    pt={2}
+                >
+                    {estados.tutoriais.map((tut: Tutorial) => (
+                        <TutorialCard
+                            key={tut.id}
+                            tutorial={tut}
+                            onClick={() => acoes.setProcess(tut.pergunta)}
+                        />
+                    ))}
+                </SimpleGrid>
+            </VStack>
         </Box>
     );
 }

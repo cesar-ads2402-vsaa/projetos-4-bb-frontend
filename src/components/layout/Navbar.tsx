@@ -1,9 +1,9 @@
 "use client";
 
-import { Box, Flex, Button, HStack, IconButton } from "@chakra-ui/react";
+import { Box, Flex, Button, HStack, IconButton, Icon } from "@chakra-ui/react";
 import Link from "next/link";
 import Image from "next/image";
-import { FiLogOut } from "react-icons/fi";
+import { FiLogOut, FiHome } from "react-icons/fi";
 import { BotaoAdmin } from "@/features/admin/components/BotaoAdmin";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -29,10 +29,30 @@ export const Navbar = () => {
                 alignItems="center"
                 justifyContent="space-between"
             >
-                {/* LADO ESQUERDO: LOGO E TÍTULO FAQ BB */}
-                <HStack gap={4}>
+                {/* LADO ESQUERDO: BOTÃO HOME, LOGO E TÍTULO FAQ BB */}
+                <HStack gap={{ base: 2, md: 4 }}>
+                    {/* NOVO: Botão de Home altamente indicativo para Mobile */}
+                    <Link href="/" passHref>
+                        <Button
+                            variant="ghost"
+                            color="blue.900"
+                            borderRadius="full"
+                            size="sm"
+                            px={{ base: 2, md: 3 }}
+                            gap={2}
+                            _hover={{ bg: "blackAlpha.100" }}
+                            cursor="pointer"
+                        >
+                            <Icon as={FiHome} fontSize="20px" />
+                            <Box as="span" display={{ base: "none", md: "inline" }} fontWeight="bold" fontSize="xs">
+                                Início
+                            </Box>
+                        </Button>
+                    </Link>
+
+                    {/* Logo do Banco do Brasil */}
                     <Link href="/">
-                        <Box position="relative" width={{ base: "120px", md: "160px" }} height="40px">
+                        <Box position="relative" width={{ base: "110px", md: "160px" }} height="40px" cursor="pointer">
                             <Image
                                 src="/bb-logo.png"
                                 alt="Logo do Banco do Brasil"
